@@ -2,11 +2,26 @@
 //【重要】
 //insert.phpを修正（関数化）してからselect.phpを開く！！
 include("funcs.php");
+session_start();
+
+//ログインチェック
+sschk();
+$uid = $_SESSION["uid"];
+$kanri_frag = $_SESSION["kanri_flg"];
+
 $pdo = db_conn();
 
 //２．データ登録SQL作成
-$sql = "SELECT * FROM gs_todo_table";
-$stmt = $pdo->prepare($sql);
+if($kanri_frag == 1){
+  //管理者　全員のタスクを表示
+  $sql = "SELECT * FROM gs_todo_table";
+  $stmt = $pdo->prepare($sql);
+}else{
+  //一般　自分のタスクを表示
+  $sql = "SELECT * FROM gs_todo_table WHERE uid=:uid";
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindValue(':uid', $uid, PDO::PARAM_STR);
+}
 $status = $stmt->execute();
 
 //３．データ表示
@@ -39,7 +54,11 @@ $json = json_encode($values,JSON_UNESCAPED_UNICODE);
   <nav class="navbar navbar-default">
     <div class="container-fluid">
       <div class="navbar-header">
-      <a class="navbar-brand" href="insert_view.php">データ登録</a>
+      <a class="navbar-brand" href="insert_view.php">TODO登録</a>
+      <?php if($_SESSION["kanri_flg"]=="1"){ ?>
+        <a class="navbar-brand" href="user.php">ユーザー登録</a>
+      <?php } ?>
+      <a class="navbar-brand" href="logout.php">ログアウト</a>
       </div>
     </div>
   </nav>
@@ -49,10 +68,19 @@ $json = json_encode($values,JSON_UNESCAPED_UNICODE);
 <!-- Main[Start] -->
 <div>
     <div class="container jumbotron">
+      <?php if($_SESSION["kanri_flg"]=="0"){ ?>
+        <legend><?php echo $_SESSION["name"]; ?>さんのタスク</legend>
+      <?php } ?>
+      <?php if($_SESSION["kanri_flg"]=="1"){ ?>
+        <legend>全員のタスク</legend>
+      <?php } ?>
       <table>
         <tr>
           <th></th>
           <th>TODO</th>
+          <?php if($_SESSION["kanri_flg"]=="1"){ ?>
+            <th>作成者</th>
+          <?php } ?>
           <th></th>
           <th></th>
         </tr>
@@ -67,6 +95,9 @@ $json = json_encode($values,JSON_UNESCAPED_UNICODE);
             <?php endif; ?>
           </td>
           <td class="todo"><?=h($v["todo"])?></td>
+          <?php if($_SESSION["kanri_flg"]=="1"){ ?>
+            <td><?=h($v["name"])?></td>
+          <?php } ?>
           <td class="button-1"><a href="detail.php?id=<?=h($v["id"])?>">更新</a></td>
           <td class="button-1"><a href="delete.php?id=<?=h($v["id"])?>">削除</a></td>
         <!-- </form> -->

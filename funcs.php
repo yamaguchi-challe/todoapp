@@ -7,9 +7,13 @@ function h($str){
 //DB接続関数：db_conn()
 function db_conn(){
     try {
+        // $db_name = "yamaguchi-challe_todo_db";    //データベース名
+        // $db_id   = "yamaguchi-challe";      //アカウント名
+        // $db_pw   = "password00";          //パスワード：XAMPPはパスワード無し or MAMPはパスワード”root”に修正してください。
+        // $db_host = "mysql57.yamaguchi-challe.sakura.ne.jp"; //DBホスト
         $db_name = "gs_db3";    //データベース名
         $db_id   = "root";      //アカウント名
-        $db_pw   = "";          //パスワード：XAMPPはパスワード無し or MAMPはパスワード”root”に修正してください。
+        $db_pw   = "";      //パスワード：XAMPPはパスワード無しに修正してください。
         $db_host = "localhost"; //DBホスト
         $pdo = new PDO('mysql:dbname='.$db_name.';charset=utf8;host='.$db_host, $db_id, $db_pw);
         return $pdo;
@@ -30,7 +34,14 @@ function redirect($filename){
     exit();
 }
 
-
-
-
+//SessionCheck(スケルトン)
+function sschk(){
+    if(!isset($_SESSION["chk_ssid"]) || $_SESSION["chk_ssid"]!=session_id()){
+      redirect("login.php");
+    //   exit("Login Error");
+   }else{
+      session_regenerate_id(true);
+      $_SESSION["chk_ssid"] = session_id();
+   }
+  }
 
