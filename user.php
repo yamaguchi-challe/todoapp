@@ -32,7 +32,7 @@ include "funcs.php";
      <label>Login ID：<input type="text" name="lid" required></label><br>
      <label>Login PW<input type="text" name="lpw" required></label><br>
      <label>管理FLG：
-      一般<input type="radio" name="kanri_flg" value="0" required>　
+      一般<input type="radio" name="kanri_flg" value="0" required>
       管理者<input type="radio" name="kanri_flg" value="1">
     </label>
     <br>

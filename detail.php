@@ -58,10 +58,10 @@ $v =  $stmt->fetch();
    <fieldset>
     <legend>todo[更新画面]</legend>
      <label>todo：<input type="text" name="todo" value="<?=$v["todo"]?>"></label><br>
+     <label>優先度：<input type="number" name="prim" value="<?=$v["prim"]?>"></label><br>
      <input type="submit" value="送信">
      <input type="hidden" name="id" value="<?=$v["id"]?>">
      <input type="hidden" name="end" value="<?=$v["end"]?>">
-     <input type="hidden" name="prim" value="<?=$v["prim"]?>">
     </fieldset>
   </div>
 </form>

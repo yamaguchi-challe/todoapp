@@ -14,11 +14,11 @@ $pdo = db_conn();
 //２．データ登録SQL作成
 if($kanri_frag == 1){
   //管理者　全員のタスクを表示
-  $sql = "SELECT * FROM gs_todo_table";
+  $sql = "SELECT * FROM gs_todo_table ORDER BY name ASC, prim ASC";
   $stmt = $pdo->prepare($sql);
 }else{
   //一般　自分のタスクを表示
-  $sql = "SELECT * FROM gs_todo_table WHERE uid=:uid";
+  $sql = "SELECT * FROM gs_todo_table WHERE uid=:uid ORDER BY prim ASC";
   $stmt = $pdo->prepare($sql);
   $stmt->bindValue(':uid', $uid, PDO::PARAM_STR);
 }
@@ -77,6 +77,7 @@ $json = json_encode($values,JSON_UNESCAPED_UNICODE);
       <table>
         <tr>
           <th></th>
+          <th>優先順</th>
           <th>TODO</th>
           <?php if($_SESSION["kanri_flg"]=="1"){ ?>
             <th>作成者</th>
@@ -94,6 +95,7 @@ $json = json_encode($values,JSON_UNESCAPED_UNICODE);
               <a href="change_stat.php?id=<?=h($v["id"])?>&end=<?=h($v["end"])?>" class="button-30">☑</a>
             <?php endif; ?>
           </td>
+          <td><?=h($v["prim"])?></td>
           <td class="todo"><?=h($v["todo"])?></td>
           <?php if($_SESSION["kanri_flg"]=="1"){ ?>
             <td><?=h($v["name"])?></td>
